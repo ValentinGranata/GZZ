@@ -1,0 +1,4 @@
+header {
+    width: 400px !important;
+    height: calc(100vh - 40px);
+}

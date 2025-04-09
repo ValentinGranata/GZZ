@@ -1,0 +1,21 @@
+.posts {
+    height: calc(100vh - 40px);
+}
+
+.post-image {
+    height: 400px;
+    aspect-ratio: 16/9;
+
+    border-radius: 8px;
+}
+
+.comments {
+    width: 500px !important;
+    height: calc(100vh - 40px);
+    border-radius: 16px;
+}
+
+.comments-list {
+    overflow-y: auto;
+    height: calc(100vh - 300px);
+}
