@@ -14,6 +14,9 @@
 
         <link rel="stylesheet" href="./assets/style/general.css">
         <link rel="stylesheet" href="./assets/style/index.css">
+
+        <script defer src="/projects/gzz/data/post/load_post.js"></script>
+        <script defer src="/projects/gzz/assets/script/post.js"></script>
     </head>
     <body class="center pad gap">
 
@@ -21,22 +24,22 @@
 
         <section class="posts box column gap">
             <nav class="row gap w center">
-                <a class="inner-box center btn active" href="#">Navigate</a>
-                <a class="inner-box center btn" href="#">Reposts</a>
-                <a class="inner-box center btn" href="#">Saved</a>
-                <a class="inner-box center btn" href="#">Liked</a>
+                <a id="random-btn" class="inner-box center btn active" href="#">Navigate</a>
+                <a id="reposts-btn" class="inner-box center btn" href="#">Reposts</a>
+                <a id="saved-btn" class="inner-box center btn" href="#">Saved</a>
+                <a id="liked-btn" class="inner-box center btn" href="#">Liked</a>
             </nav>
 
             <div class="content column box cstart space gap h">
                 <div class="top column gap">
                     <div class="head inner-box row gap start">
-                        <h1 class="title w">Title</h1>
+                        <h1 id="startup-name" class="title w">Title</h1>
                         <div class="contact inner-box center btn">
                             Contact
                         </div>
                     </div>
 
-                    <div>
+                    <div id="startup-description">
                         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis 
                         cupiditate officiis, illo laboriosam ex iusto? Voluptatibus rem, 
                         alias voluptas cum non maiores nostrum odit obcaecati ut at blanditiis delectus dolores.
@@ -52,7 +55,7 @@
                     <div class="info row gap w space">
                         <div class="profile row start gap inner-box">
                             <img src="./assets/img/profile.png" alt="" class="icon">
-                            <h1>Valentin Granata</h1>
+                            <h1 id="startup-owner">Name Surname</h1>
                         </div>
 
                         <div class="interaction row gap">

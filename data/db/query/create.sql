@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS User (
 
 CREATE TABLE IF NOT EXISTS Startup (
     id          INTEGER                     PRIMARY KEY AUTO_INCREMENT,
-    name        VARCHAR(50)     NOT NULL,
+    title       VARCHAR(50)     NOT NULL,
     description TEXT            NOT NULL,
     category    VARCHAR(50)     NOT NULL,
     email       VARCHAR(320)    NOT NULL    UNIQUE,

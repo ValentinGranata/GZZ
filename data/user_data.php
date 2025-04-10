@@ -18,6 +18,7 @@
     }
 
     $user = $user_result->fetch_assoc();
+    $user_id = $user["id"];
     $email = $user["email"];
     $name = $user["name"];
     $surname = $user["surname"];

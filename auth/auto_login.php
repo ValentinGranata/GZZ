@@ -1,6 +1,6 @@
 <?php
 
-    include_once "../data/db.php";   
+    include_once "/projects/gzz/data/db.php";   
 
     session_start();
 

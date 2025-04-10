@@ -27,7 +27,7 @@
     </div>
 
     <div class="bottom w">
-        <a class="profile gap box row start btn">
+        <a class="profile gap box row start btn" href="/projects/gzz/profile.php">
             <img class="avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShYwM33sSN7MtnLIq0k1qjhpoEtSstLE26gA&s" alt="avatar">
             <h1 class="username"><?php echo $name . " " . $surname  ?></h1>
         </a>
