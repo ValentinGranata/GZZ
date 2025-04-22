@@ -18,16 +18,12 @@
             return;
         }
 
-        $relativePath = $folder . '/' . $imageName;
+        $relativePath = $folder . "/" . $imageName;
         $absolutePath = __DIR__ . "/" . $relativePath;
 
         if (!is_dir(dirname($absolutePath))) {
             mkdir(dirname($absolutePath), 0755, true);
         }
-
-        echo "tmp : " . $imageTmpName . "<br>";
-        echo "abs : " . $absolutePath . "<br>";
-        echo "rel : " . $relativePath . "<br>";
 
         move_uploaded_file($imageTmpName, $absolutePath);
 

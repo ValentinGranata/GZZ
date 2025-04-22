@@ -31,7 +31,7 @@
             </nav>
 
             <div class="content column box cstart space gap h">
-                <div class="top column gap">
+                <div class="top column gap w cstart">
                     <div class="head inner-box row gap start">
                         <h1 id="startup-name" class="title w">Title</h1>
                         <div class="contact inner-box center btn">
@@ -50,11 +50,11 @@
                 </div>
 
                 <div class="bottom column gap w">
-                    <img class="post-image" src="https://cdn.pixabay.com/photo/2018/08/04/11/30/draw-3583548_640.png" alt="">
+                    <img class="post-image" src="#" alt="Banner" id="startup-banner">
 
                     <div class="info row gap w space">
                         <div class="profile row start gap inner-box">
-                            <img src="./assets/img/profile.png" alt="" class="icon">
+                            <img id="owner-profile-picture" src="./assets/img/profile.png" alt="" class="icon">
                             <h1 id="startup-owner">Name Surname</h1>
                         </div>
 
@@ -77,8 +77,8 @@
             </div>
 
             <nav class="row gap w">
-                <div class="inner-box center btn">Back</div>
-                <div class="inner-box center btn">Next</div>
+                <div class="inner-box center btn error">Back</div>
+                <div class="inner-box center btn success">Next</div>
             </nav>
         </section>
 

@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Pixelify+Sans:wght@400..700&display=swap');
 
+:root {
+    --success: rgba(76, 175, 80, 0.2);
+    --error: rgba(244, 67, 54, 0.2);
+    --warning: rgba(255, 152, 0, 0.2);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -58,6 +64,24 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.success {
+    background: var(--success) !important;
+    box-shadow: 0 4px 30px var(--success) !important;
+    border: 1px solid var(--success) !important;
+}
+
+.error {
+    background: var(--error) !important;
+    box-shadow: 0 4px 30px var(--error) !important;
+    border: 1px solid var(--error) !important;
+}
+
+.warning {
+    background: var(--warning) !important;
+    box-shadow: 0 4px 30px var(--warning) !important;
+    border: 1px solid var(--warning) !important;
+}
+
 .btn {
     cursor: pointer;
     transition: scale 0.3s ease-in-out;
@@ -77,6 +101,8 @@ body {
 .icon {
     width: 20px;
     height: 20px;
+
+    border-radius: 20px;
 }
 
 .avatar {

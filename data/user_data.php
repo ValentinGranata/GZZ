@@ -22,6 +22,7 @@
     $email = $user["email"];
     $name = $user["name"];
     $surname = $user["surname"];
+    $profile_picture = $user["profile_picture"];
 
     //mysqli_close($con);
 

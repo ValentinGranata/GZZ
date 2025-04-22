@@ -14,11 +14,16 @@
         <title><?php echo $username; ?> - GZZ</title>
         
         <link rel="stylesheet" href="/projects/gzz/assets/style/general.css">
+        <script src=""></script>
     </head>
     <body class="pad center">
         <section class="profile filter">
             <div class="box column gap">
                 <div class="column gap">
+                    <div class="info">
+                        <img class="avatar" src="<?php echo "/projects/gzz/uploads/" . $profile_picture; ?>" alt="Profile Picture" id="profile-picture">
+                    </div>
+
                     <div class="info inner-box">
                         <p class="highlight">Id:</p>
                         <p>#<?php echo $id ?></p>

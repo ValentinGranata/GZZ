@@ -5,6 +5,10 @@ const likedBtn = document.getElementById("liked-btn");
 
 let type = "random";
 
+function firstUp(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const switchType = (e, type) => {
     e.preventDefault();
 
@@ -17,7 +21,7 @@ const switchType = (e, type) => {
     type = this.type;
 
     loadRandomStartup(type)
-        .then(renderStartup);
+        .then(startup => renderStartup(startup));
 }
 
 randomBtn.onclick = (e) => switchType(e, "random");
@@ -28,16 +32,22 @@ likedBtn.onclick = (e) => switchType(e, "liked");
 const startupName = document.getElementById("startup-name");
 const startupDescription = document.getElementById("startup-description");
 const startupOwner = document.getElementById("startup-owner");
+const startupBanner = document.getElementById("startup-banner");
+const ownerProfilePpicture = document.getElementById("owner-profile-picture");
 
 window.onload = (e) => {
     e.preventDefault();
 
     loadRandomStartup(type)
-        .then(renderStartup);
+        .then(startup => renderStartup(startup));
 };
 
 function renderStartup(startup) {
+    console.log("path : /projects/gzz/uploads/")
+
     startupName.innerText = startup.title + " - " + startup.created_at;
     startupDescription.innerText = startup.description;
-    startupOwner.innerHTML = startup.name + " " + startup.surname;
+    startupOwner.innerHTML = firstUp(startup.name) + " " + firstUp(startup.surname);
+    startupBanner.src = "/projects/gzz/uploads/" + startup.banner;
+    ownerProfilePpicture.src = "/projects/gzz/uploads/" + startup.profile_picture;
 }
