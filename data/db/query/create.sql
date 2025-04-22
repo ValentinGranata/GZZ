@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS Interaction (
     id          INTEGER                             PRIMARY KEY AUTO_INCREMENT,
     startup_id  INTEGER         NOT NULL,
     user_id     INTEGER         NOT NULL,
-    type        ENUM('like', 'repost', 'save') NOT NULL,
+    type        ENUM('like', 'repost', 'save', 'view') NOT NULL,
     created_at  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_interaction_startup
