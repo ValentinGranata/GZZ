@@ -1,20 +1,24 @@
 <?php
 
-    include_once "/projects/gzz/data/db.php";   
+    include_once "../data/db.php";   
 
     session_start();
 
-    if (isset($_COOKIE['auto_login_token'])) {
-        $token = $_COOKIE['auto_login_token'];
+    $token = $_COOKIE['auto_login_token'];
 
-        $query = "SELECT * FROM user WHERE token = '" . $token . "';";
-        $res = mysqli_query($con, $query);
+    if (isset($token)) {
+        $user_select_query = "SELECT * FROM User WHERE token = '" . $token . "';";
+        $user_select_result = $con->query($user_select_query);
 
-        if (mysqli_num_rows($res) > 0) {
-            $user = $res->fetch_assoc();
-            $_SESSION['id'] = $user['id'];
-
-            header("Location: ../profile.php");
+        if ($user_select_result->num_rows > 0) {
+            $_SESSION['user_id'] = $user_select_result->fetch_assoc()["id"];
+        } else {
+            header("Location: /projects/gzz/auth/logout.php");
+            exit();
+        }
+    } else {
+        if ($_SERVER["REQUEST_URI"] != "/projects/gzz/auth/login.php" && $_SERVER["REQUEST_URI"] != "/projects/gzz/auth/register.php") {
+            header("Location: /projects/gzz/auth/logout.php");
             exit();
         }
     }

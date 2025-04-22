@@ -2,34 +2,36 @@
 
     include_once "../data/db.php";
     include_once "./auto_login.php";
-    include_once "./auth.php";
+    include_once "./auth.php"; 
 
-    session_start();
+    if (isset($_COOKIE['auto_login_token'])) {
+        header("Location: /projects/gzz/profile.php");
+        exit();
+    }
 
-    $error;
+    $info = array();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $con->real_escape_string(strtolower($_POST['email']));
         $password = $con->real_escape_string(strtolower($_POST['password']));
 
-        $login_query = "SELECT * FROM user WHERE email = '" . $email . "';";
-        $res = mysqli_query($con, $login_query);
+        $user_select_query = "SELECT * FROM User WHERE email = '" . $email . "';";
+        $user_select_result = $con->query($user_select_query);
 
-        if (mysqli_num_rows($res) > 0) {
-            $user = $res->fetch_assoc();
+        if ($user_select_result->num_rows > 0) {
+            $user = $user_select_result->fetch_assoc();
             $hashed_password = $user["password"];
 
             if (password_verify($password, $hashed_password)) {
-                generate_token($user["id"], $con);
-                header("Location: ../profile.php");
+                generate_token($con, $user["id"]);
+                header("Location: /projects/gzz/profile.php");
                 exit();
             }
         } else {
-            $error = "Utente non trovato!";
+            $info["type"] = "error";
+            $info["meessage"] = "Utente non trovato!";
         }
     }
-
-    mysqli_close($con);
     
 ?>
 
@@ -49,6 +51,13 @@
                 <p class="title">Login</p>
 
                 <form class="column gap" action="login.php" method="POST">
+                    <?php 
+                    
+                        if (!empty($info)) {
+                            echo "<div class='box " . $info["type"] . "'>" . $info["message"] . "</div>";
+                        }
+
+                    ?>
                     <input class="inner-box" type="text" minlength="3" name="email" placeholder="Email" required>
                     <input class="inner-box" type="password" minlength="3" name="password" placeholder="Password" required>
                     

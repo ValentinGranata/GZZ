@@ -2,6 +2,7 @@
 
     session_start();
     session_destroy();
+
     setcookie(
         'auto_login_token', 
         '', 
@@ -12,7 +13,7 @@
         true
     );
 
-    header("Location: ../auth/login.php");
+    header("Location: /projects/gzz/auth/login.php");
     exit();
 
 ?>

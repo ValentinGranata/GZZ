@@ -28,8 +28,8 @@
 
     <div class="bottom w">
         <a class="profile gap box row start btn" href="/projects/gzz/profile.php">
-            <img class="avatar" src="<?php echo "/projects/gzz/uploads/" . $profile_picture; ?>" alt="avatar">
-            <h1 class="username"><?php echo ucfirst($name) . " " . ucfirst($surname)  ?></h1>
+            <img class="avatar-small" src="<?php echo "/projects/gzz/uploads/" . $user["profile_picture"]; ?>" alt="avatar">
+            <h1 class="username"><?php echo ucfirst($user["name"]) . " " . ucfirst($user["surname"])  ?></h1>
         </a>
     </div>
     

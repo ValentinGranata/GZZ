@@ -1,7 +1,11 @@
 <?php 
 
-    include("./data/db.php");
-    include("./data/user_data.php");
+    include_once "./data/db.php";
+    include_once "./auth/auto_login.php";
+    include_once "./auth/auth.php";
+
+    $user = load_user_data($con);
+    mysqli_close($con);
 
 ?>
 

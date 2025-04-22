@@ -3,9 +3,14 @@
     include_once "../data/db.php";
     include_once "./auto_login.php";
     include_once "./auth.php";
+
     include_once "../uploads/upload_picture.php";
 
-    session_start();
+    if (isset($_COOKIE['auto_login_token'])) {
+        header("Location: /projects/gzz/profile.php");
+        exit();
+    }
+
     $info = array();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -15,26 +20,27 @@
         $password = $con->real_escape_string($_POST["password"]);
         $picture = $_FILES['picture'];
 
-        $check_query = "SELECT * FROM user WHERE email = '" . $email . "';";
-        $check_res = $con->query($check_query);
+        $select_user_query = "SELECT * FROM User WHERE email = '" . $email . "';";
+        $select_user_result = $con->query($select_user_query);
 
-        if (mysqli_num_rows($check_res) > 0) {
+        if ($select_user_result->num_rows > 0) {
             $info["type"] = "error";
             $info["message"] = "Email gia in uso!";
         } else {
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $insert_query = "INSERT INTO user (email, password, name, surname) VALUES ('" . $email . "', '" . $password . "', '" . $name . "', '" . $surname . "');";
-            $insert_res = $con->query($insert_query);
+
+            $create_user_query = "INSERT INTO User (email, password, name, surname) VALUES ('" . $email . "', '" . $password . "', '" . $name . "', '" . $surname . "');";
+            $create_user_result = $con->query($create_user_query);
             $user_id = $con->insert_id;
 
-            if ($insert_res) {
-                generate_token($user_id, $con);
+            if ($create_user_result) {
+                generate_token($con, $user_id);
                 
                 if (isset($picture) && !empty($picture['name'])) {
                     upload_image("profile_pictures", $picture, $con, $user_id);
                 }
 
-                header("Location: ../profile.php");
+                header("Location: /projects/gzz/profile.php");
                 exit();
             } else {
                 $info["type"] = "error";
@@ -45,8 +51,6 @@
             $info["message"] = "Utente creato con successo!";
         }
     }
-
-    mysqli_close($con);
 
 ?>
 
