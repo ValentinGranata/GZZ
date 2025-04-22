@@ -1,11 +1,12 @@
 CREATE TABLE IF NOT EXISTS User (
-    id          INTEGER                     PRIMARY KEY AUTO_INCREMENT,
-    email       VARCHAR(320)    NOT NULL    UNIQUE,
-    password    VARCHAR(255)    NOT NULL,
-    name        VARCHAR(50)     NOT NULL,
-    surname     VARCHAR(50)     NOT NULL,
-    token       VARCHAR(255),
-    created_at  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
+    id              INTEGER                     PRIMARY KEY AUTO_INCREMENT,
+    email           VARCHAR(320)    NOT NULL    UNIQUE,
+    password        VARCHAR(255)    NOT NULL,
+    name            VARCHAR(50)     NOT NULL,
+    surname         VARCHAR(50)     NOT NULL,
+    token           VARCHAR(255),
+    profile_picture VARCHAR(255),
+    created_at      TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Startup (
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS Startup (
     category    VARCHAR(50)     NOT NULL,
     email       VARCHAR(320)    NOT NULL    UNIQUE,
     owner_id    INTEGER         NOT NULL,
+    banner      VARCHAR(255),
     created_at  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_startup_owner

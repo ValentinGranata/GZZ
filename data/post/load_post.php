@@ -34,7 +34,7 @@
         echo json_encode($startup);
         exit();
     } else {
-        $query = "SELECT * FROM Interaction, Startup WHERE user_id = " . $user_id  . " AND type = '" . $type . "' AND Startup.id = Interaction.startup_id ORDER BY Interaction.created_at LIMIT 1;";
+        $query = "SELECT * FROM Interaction, Startup WHERE Interaction.user_id = " . $user_id  . " AND Interaction.type = '" . $type . "' AND Startup.id = Interaction.startup_id ORDER BY Interaction.created_at LIMIT 1;";
         $res = $con->query($query);
 
         if ($res->num_rows == 0) {

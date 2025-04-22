@@ -11,9 +11,9 @@
                 <img class="icon" src="./assets/img/home.png" alt="icon">
                 <p>Home</p>
             </a>
-            <a class="btn row gap inner-box start">
+            <a class="btn row gap inner-box start" href="/projects/gzz/create_post.php">
                 <img class="icon" src="./assets/img/search.png" alt="icon">
-                <p>Search</p>
+                <p>Post</p>
             </a>
             <a class="btn row gap inner-box start" href="/projects/gzz/profile.php">
                 <img class="icon" src="./assets/img/profile.png" alt="icon">
