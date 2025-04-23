@@ -73,8 +73,8 @@
                 <textarea class="inner-box" name="description" placeholder="Description" required></textarea>
                 <input class="inner-box" type="file" name="banner" accept="image/*" placeholder="Banner">
 
-                <input class="btn inner-box" type="submit" value="Create Post">
-                <a class="btn" href="./index.php">Back</a>
+                <input class="btn inner-box success" type="submit" value="Create Post">
+                <a class="btn error inner-box" href="./index.php">Back</a>
             </form>
         </section>
         
