@@ -1,5 +1,19 @@
 <?php 
 
+    function get_startup_by_id($con, $startup_id) {
+        $select_startup_query = "SELECT Startup.*, User.id AS owner_id, User.name AS owner_name, User.surname AS owner_surname, User.email AS owner_email, User.profile_picture AS owner_profile_picture FROM Startup INNER JOIN User ON User.id = Startup.owner_id WHERE Startup.id = " . $startup_id . ";";
+        $select_startup_result = $con->query($select_startup_query);
+        $startup = null;
+        
+        if ($select_startup_result->num_rows == 0) {
+            $startup = null;
+        } else { 
+            $startup = $select_startup_result->fetch_assoc();
+        }
+
+        return $startup;
+    }
+
     function get_random_startup($con, $user) {
         $startup = null;
 

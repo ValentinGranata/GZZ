@@ -1,53 +1,69 @@
-const randomBtn = document.getElementById("random-btn");
-const repostsBtn = document.getElementById("reposts-btn");
-const savedBtn = document.getElementById("saved-btn");
-const likedBtn = document.getElementById("liked-btn");
+const PARAMS = new URLSearchParams(window.location.search);
 
-let type = "random";
+const btns = ["random", "repost", "save", "like"];
 
-function firstUp(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+const switchType = (type) => {
+    btns.forEach((btn) => {
+        const btnElement = document.getElementById(`${btn}-btn`);
+        if (!btnElement) return;
+
+        btnElement.classList.remove('active');
+    });
+
+    document.getElementById(`${type}-btn`).classList.add('active');
 }
 
-const switchType = (e, type) => {
-    e.preventDefault();
-
-    randomBtn.classList.remove('active');
-    repostsBtn.classList.remove('active');
-    savedBtn.classList.remove('active');
-    likedBtn.classList.remove('active');
-    e.target.classList.add('active');
-
-    type = this.type;
-
-    loadRandomStartup(type)
-        .then(startup => renderStartup(startup));
+window.onload = () => {
+    const type = PARAMS.get('type');
+    
+    switchType(type);
 }
 
-randomBtn.onclick = (e) => switchType(e, "random");
-repostsBtn.onclick = (e) => switchType(e, "repost");
-savedBtn.onclick = (e) => switchType(e, "saved");
-likedBtn.onclick = (e) => switchType(e, "liked");
+const save = document.getElementById("save");
+const repost = document.getElementById("repost");
+const like = document.getElementById("like");
 
-const startupName = document.getElementById("startup-name");
-const startupDescription = document.getElementById("startup-description");
-const startupOwner = document.getElementById("startup-owner");
-const startupBanner = document.getElementById("startup-banner");
-const ownerProfilePpicture = document.getElementById("owner-profile-picture");
+const interactionBtns = [save, repost, like];
 
-window.onload = (e) => {
-    e.preventDefault();
+interactionBtns.forEach((btn) => {
+    btn.onclick = (e) => {
+        e.preventDefault();
 
-    loadRandomStartup(type)
-        .then(startup => renderStartup(startup));
-};
+        btn.classList.toggle('active');
+        const h1 = btn.children[1];
 
-function renderStartup(startup) {
-    console.log("path : /projects/gzz/uploads/")
+        if (h1) {
+            h1.innerText = parseInt(h1.innerText) + (btn.classList.contains('active') ? 1 : -1);
+        }
 
-    startupName.innerText = startup.title + " - " + startup.created_at;
-    startupDescription.innerText = startup.description;
-    startupOwner.innerHTML = firstUp(startup.name) + " " + firstUp(startup.surname);
-    startupBanner.src = "/projects/gzz/uploads/" + startup.banner;
-    ownerProfilePpicture.src = "/projects/gzz/uploads/" + startup.profile_picture;
+        const btnType = btn.id;
+        const startupID = PARAMS.get('startup_id');
+
+        addInteraction(startupID, btnType);
+    }
+});
+
+function addInteraction(startupID, type) {
+    fetch(`http://localhost/projects/gzz/data/interaction/add_interaction.php`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            "startup_id": startupID,
+            "type": type
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+}
+
+const filter = document.getElementById("filter");
+const deleteForm = document.getElementById("delete-form");
+
+function toggleDelete() {
+    filter.classList.toggle('hidden');
+    deleteForm.classList.toggle('hidden');
 }

@@ -4,8 +4,9 @@
     include_once "./auth/auto_login.php";
     include_once "./auth/auth.php";
 
-    include_once "./data/post/get_startup.php";
+    include_once "./data/startup/get_startup.php";
     include_once "./data/comment/get_startup_comments.php";
+    include_once "./data/interaction/get_startup_interactions.php";
 
     $user = load_user_data($con);
 
@@ -17,7 +18,7 @@
         $type = $_GET["type"];
     }
 
-    if ($type != "random" && $type != "repost" && $type != "saved" && $type != "liked") {
+    if ($type != "random" && $type != "repost" && $type != "save" && $type != "like") {
         exit("Invalid type.");
     }
 
@@ -31,6 +32,8 @@
 
     if (isset($startup)) {
         $comments = get_startup_comments($con, $startup["id"]);
+        $interactions = get_startup_interactions($con, $startup["id"]);
+        $user_interaction = get_user_interaction($con, $user["id"], $startup["id"]);
     }
 
 ?>
@@ -45,40 +48,52 @@
         <link rel="stylesheet" href="./assets/style/general.css">
         <link rel="stylesheet" href="./assets/style/index.css">
 
-        <!-- <script defer src="/projects/gzz/data/post/load_post.js"></script> -->
-        <!-- <script defer src="/projects/gzz/assets/script/post.js"></script> -->
+        <script defer src="/projects/gzz/assets/script/post.js"></script>
     </head>
     <body class="center pad gap">
+
+        <div id="filter" class="filter hidden"></div>
+
+        <div id="delete-form" class="delete-form box column hidden">
+            <h1 class="title">Sicuro di voler eliminare questa Startup?</h1>
+            <div class="actions row gap">
+                <button class="btn success inner-box" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleDelete()" : ""; ?>">Cancel</button>
+                <form action="/projects/gzz/data/startup/delete_startup.php" method="POST">
+                    <input type="hidden" name="startup_id" value="<?php echo $startup["id"]; ?>">
+                    <input type="submit" value="Delete" class="btn error inner-box">
+                </form>
+            </div>
+        </div>
 
         <?php include_once('./components/header.php'); ?>
 
         <section class="posts box column gap">
             <nav class="row gap w center">
                 <a id="random-btn" class="inner-box center btn active" href="?type=random">Navigate</a>
-                <a id="reposts-btn" class="inner-box center btn" href="?type=repost">Reposts</a>
-                <a id="saved-btn" class="inner-box center btn" href="?type=saved">Saved</a>
-                <a id="liked-btn" class="inner-box center btn" href="?type=liked">Liked</a>
+                <a id="repost-btn" class="inner-box center btn" href="?type=repost">Reposts</a>
+                <a id="save-btn" class="inner-box center btn" href="?type=save">Saved</a>
+                <a id="like-btn" class="inner-box center btn" href="?type=like">Liked</a>
             </nav>
 
             <?php if (!isset($startup)) { ?>
                 <div class="inner-box h">Nessuna Startup Trovata</div>
             <?php } else { ?>
                 <div class="content column box cstart space gap h">
-                    <div class="top column gap w cstart">
+                    <div class="top column gap w cstart h">
                         <div class="head inner-box row gap start">
                             <h1 id="startup-name" class="title w"><?php echo $startup["title"]; ?> </h1>
-                            <div class="contact inner-box center btn">
-                                Contact
+                            <div class="contact inner-box center btn error" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleDelete()" : ""; ?>">
+                                <?php echo $startup["owner_id"] == $user["id"] ? "DELETE" : "CONTACT"; ?>
                             </div>
                         </div>
 
-                        <div id="startup-description">
+                        <div id="startup-description" class="inner-box h start cstart">
                             <?php echo $startup["description"]; ?>
                         </div>
                     </div>
 
                     <div class="bottom column gap w">
-                        <img class="post-image" src="/projects/gzz/uploads/<?php echo $startup["banner"]; ?>" alt="Banner" id="startup-banner">
+                        <img class="post-image inner-box" src="/projects/gzz/uploads/<?php echo $startup["banner"]; ?>" alt="Banner" id="startup-banner">
 
                         <div class="info row gap w space">
                             <div class="profile row start gap inner-box">
@@ -87,17 +102,17 @@
                             </div>
 
                             <div class="interaction row gap">
-                                <div class="inner-box row gap btn">
-                                    <img src="./assets/img/share.png" alt="" class="icon">
-                                    <h1>12</h1>
+                                <div id="save" class="inner-box row gap btn <?php echo isset($user_interaction["save"]) ? "active" : ""; ?>">
+                                    <img src="./assets/img/view.png" alt="" class="icon">
+                                    <h1><?php echo isset($interactions["save"]) ? $interactions["save"] : "0"; ?></h1>
                                 </div>
-                                <div class="inner-box row gap btn">
+                                <div id="repost" class="inner-box row gap btn <?php echo isset($user_interaction["repost"]) ? "active" : ""; ?>">
                                     <img src="./assets/img/repost.png" alt="" class="icon">
-                                    <h1>12</h1>
+                                    <h1><?php echo isset($interactions["repost"]) ? $interactions["repost"] : "0"; ?></h1>
                                 </div>
-                                <div class="inner-box row gap btn">
+                                <div id="like" class="inner-box row gap btn <?php echo isset($user_interaction["like"]) ? "active" : ""; ?>">
                                     <img src="./assets/img/like.png" alt="" class="icon">
-                                    <h1>12</h1>
+                                    <h1><?php echo isset($interactions["like"]) ? $interactions["like"] : "0"; ?></h1>
                                 </div>
                             </div>
                         </div>
@@ -144,8 +159,8 @@
 
             <form class="bottom row gap" method="POST" action="/projects/gzz/data/comment/create_startup_comment.php" id="comment-form">
                 <input type="hidden" name="startup_id" value="<?php echo $startup["id"]; ?>">
-                <input type="text" name="message" class="box" placeholder="Comment.." minlength="2" maxlength="255" required>
-                <input type="submit" value="Send" class="box btn flex">
+                <input type="text" name="message" class="inner-box" placeholder="Comment.." minlength="2" maxlength="255" required>
+                <input type="submit" value="Send" class="inner-box btn flex">
             </form>
         </section>
 
@@ -184,6 +199,12 @@
                     console.error("Error submitting the form: ", error);
                 });
             });
+
+            const startupId = <?php echo $startup["id"]; ?>;
+            const url = new URL(window.location);
+
+            url.searchParams.set("startup_id", startupId);
+            window.history.replaceState({}, '', url);
         </script>
         
     </body>

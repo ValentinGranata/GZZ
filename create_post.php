@@ -1,10 +1,11 @@
 <?php 
 
     include_once "./data/db.php";
-    include_once "./auth/user_data.php";
+    include_once "./auth/auto_login.php";
+    include_once "./auth/auth.php";
     include_once "./uploads/upload_picture.php";
 
-    session_start();
+    $user = load_user_data($con);
     
     $title = isset($_POST['title']) ? $con->real_escape_string($_POST['title']) : '';
     $description = isset($_POST['description']) ? $con->real_escape_string($_POST['description']) : '';
@@ -26,7 +27,7 @@
                 $info["type"] = "error";
                 $info["message"] = "Esiste già una startup con questa email!";
             } else {
-                $query = "INSERT INTO Startup (title, description, category, email, owner_id) VALUES ('" . $title . "', '" . $description . "', '" . $category . "', '" . $email . "', " . $_SESSION["id"] . ");";
+                $query = "INSERT INTO Startup (title, description, category, email, owner_id) VALUES ('" . $title . "', '" . $description . "', '" . $category . "', '" . $email . "', " . $user["id"] . ");";
                 $result = $con->query($query);
 
                 if ($con->error) {

@@ -19,10 +19,6 @@
                 <img class="icon" src="./assets/img/profile.png" alt="icon">
                 <p>Profile</p>
             </a>
-            <a class="btn row gap inner-box start">
-                <img class="icon" src="./assets/img/settings.png" alt="icon">
-                <p>Settings</p>
-            </a>
         </nav>
     </div>
 
