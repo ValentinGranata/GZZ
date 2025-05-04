@@ -41,6 +41,8 @@
                     
                     $info["type"] = "success";
                     $info["message"] = "Startup creata con successo!";
+                    header("Location: /projects/gzz/index.php?startup_id=" . $con->insert_id);
+                    exit();
                 }
             }
         }

@@ -14,18 +14,26 @@
     $shown = array();
     $startup = array();
 
-    if (isset($_GET["type"])) {
-        $type = $_GET["type"];
-    }
+    if (isset($_GET["startup_id"])) {
+        $startup = get_startup_by_id($con, $_GET["startup_id"]);
 
-    if ($type != "random" && $type != "repost" && $type != "save" && $type != "like") {
-        exit("Invalid type.");
-    }
-
-    if ($type == "random") {
-        $startup = get_random_startup($con, $user);
+        if (!isset($startup)) {
+            exit("Startup not found.");
+        }
     } else {
-        $startup = get_startup($con, $user, $type);
+        if (isset($_GET["type"])) {
+            $type = $_GET["type"];
+        }
+
+        if ($type != "random" && $type != "repost" && $type != "save" && $type != "like") {
+            exit("Invalid type.");
+        }
+
+        if ($type == "random") {
+            $startup = get_random_startup($con, $user);
+        } else {
+            $startup = get_startup_by_type($con, $user, $type);
+        }
     }
 
     $comments = null;
@@ -49,17 +57,41 @@
         <link rel="stylesheet" href="./assets/style/index.css">
 
         <script defer src="/projects/gzz/assets/script/post.js"></script>
+        <script>
+            const startupId = <?php echo $startup["id"]; ?>;
+            const url = new URL(window.location);
+
+            url.searchParams.set("startup_id", startupId);
+            window.history.replaceState({}, '', url);
+
+            if (url.searchParams.get("type") == null) {
+                url.searchParams.set("type", "random");
+                window.history.replaceState({}, '', url);
+            }
+        </script>
     </head>
     <body class="center pad gap">
 
         <div id="filter" class="filter hidden"></div>
 
-        <div id="delete-form" class="delete-form box column hidden">
+        <div id="delete-startup-form" class="delete-form box column hidden">
             <h1 class="title">Sicuro di voler eliminare questa Startup?</h1>
             <div class="actions row gap">
-                <button class="btn success inner-box" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleDelete()" : ""; ?>">Cancel</button>
+                <button class="btn success inner-box" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleStartupDelete()" : ""; ?>">Cancel</button>
                 <form action="/projects/gzz/data/startup/delete_startup.php" method="POST">
                     <input type="hidden" name="startup_id" value="<?php echo $startup["id"]; ?>">
+                    <input type="submit" value="Delete" class="btn error inner-box">
+                </form>
+            </div>
+        </div>
+
+        <div id="delete-comment-form" class="delete-form box column hidden">
+            <h1 class="title">Sicuro di voler eliminare questo Commento?</h1>
+            <div class="actions row gap">
+                <button class="btn success inner-box" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleCommentDelete()" : ""; ?>">Cancel</button>
+                <form class="w" action="/projects/gzz/data/comment/delete_startup_comment.php" method="POST">
+                    <input id="current-location" type="hidden" name="redirect_url" value="">
+                    <input id="comment-id" type="hidden" name="comment_id">
                     <input type="submit" value="Delete" class="btn error inner-box">
                 </form>
             </div>
@@ -82,7 +114,7 @@
                     <div class="top column gap w cstart h">
                         <div class="head inner-box row gap start">
                             <h1 id="startup-name" class="title w"><?php echo $startup["title"]; ?> </h1>
-                            <div class="contact inner-box center btn error" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleDelete()" : ""; ?>">
+                            <div class="contact inner-box center btn error" onclick="<?php echo $startup["owner_id"] == $user["id"] ? "toggleStartupDelete()" : ""; ?>">
                                 <?php echo $startup["owner_id"] == $user["id"] ? "DELETE" : "CONTACT"; ?>
                             </div>
                         </div>
@@ -122,8 +154,8 @@
             <?php } ?>
 
             <nav class="row gap w">
-                <div class="inner-box center btn error">Back</div>
-                <div class="inner-box center btn success">Next</div>
+                <!-- <div class="inner-box center btn error">Back</div> -->
+                <div class="inner-box center btn success" onclick="nextStartup()">Next</div>
             </nav>
         </section>
 
@@ -149,6 +181,10 @@
 
                                     <p><?php echo $comment["message"]; ?></p>
                                     <p><?php echo $comment["created_at"]; ?></p>
+
+                                    <?php if ($comment["owner_id"] == $user["id"]) { ?>
+                                        <button onclick="toggleCommentDelete(<?php echo $comment['comment_id']; ?>)" class="btn error inner-box">Delete</button>
+                                    <?php } ?>
                                 </div>
                     <?php 
                             } 
@@ -166,6 +202,20 @@
 
         <script>
             const commentsList = document.getElementById("comments-list");
+
+            function getCurrentFormattedTime() {
+                const now = new Date();
+
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            }
 
             document.getElementById('comment-form').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -188,7 +238,8 @@
                                 <h1><?php echo ucfirst($user["name"]) . " " . ucfirst($user["surname"]); ?></h1>
                             </div>
                             <p>${formData.get("message")}</p>
-                            <p>test</p>
+                            <p>${getCurrentFormattedTime()}</p>
+                            <button onclick="toggleCommentDelete(${response.comment_id})" class="btn error inner-box">Delete</button>
                         </div>
                     `;
 
@@ -199,12 +250,6 @@
                     console.error("Error submitting the form: ", error);
                 });
             });
-
-            const startupId = <?php echo $startup["id"]; ?>;
-            const url = new URL(window.location);
-
-            url.searchParams.set("startup_id", startupId);
-            window.history.replaceState({}, '', url);
         </script>
         
     </body>

@@ -48,8 +48,8 @@
         return $startup;
     }
 
-    function get_startup($con, $user, $type) {
-        $select_type_startup_query = "SELECT * FROM Interaction, Startup WHERE Interaction.user_id = " . $user["id"]  . " AND Interaction.type = '" . $type . "' AND Startup.id = Interaction.startup_id ORDER BY Interaction.created_at LIMIT 1;";
+    function get_startup_by_type($con, $user, $type) {
+        $select_type_startup_query = "SELECT * FROM Interaction, Startup WHERE Interaction.user_id = " . $user["id"]  . " AND Interaction.type = '" . $type . "' AND Startup.id = Interaction.startup_id ORDER BY RAND() LIMIT 1;";
         $select_type_startup_result = $con->query($select_type_startup_query);
         $startup = null;
         

@@ -61,9 +61,24 @@ function addInteraction(startupID, type) {
 }
 
 const filter = document.getElementById("filter");
-const deleteForm = document.getElementById("delete-form");
+const deleteStartupForm = document.getElementById("delete-startup-form");
 
-function toggleDelete() {
+function toggleStartupDelete() {
     filter.classList.toggle('hidden');
-    deleteForm.classList.toggle('hidden');
+    deleteStartupForm.classList.toggle('hidden');
+}
+
+const deleteCommentForm = document.getElementById("delete-comment-form");
+
+function toggleCommentDelete(commentID) {
+    document.getElementById("comment-id").value = commentID;
+    document.getElementById("current-location").value = window.location.pathname + window.location.search;
+    console.log(window.location);
+
+    filter.classList.toggle('hidden');
+    deleteCommentForm.classList.toggle('hidden');
+}
+
+function nextStartup() {
+    window.location.search = `?type=${PARAMS.get('type')}`;
 }
